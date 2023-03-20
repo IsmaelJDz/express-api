@@ -4,6 +4,7 @@ import { get } from 'lodash';
 import { User } from '../model/user.model';
 import { CreateSessionInput } from '../schema/auth.schema';
 import {
+  findSessionById,
   // findSessionById,
   signAccessToken,
   signRefreshToken,
@@ -51,34 +52,34 @@ export async function createSessionHandler(
   });
 }
 
-// export async function refreshAccessTokenHandler(
-//   req: Request,
-//   res: Response
-// ) {
-//   const refreshToken = get(req, 'headers.x-refresh');
+export async function refreshAccessTokenHandler(
+  req: Request,
+  res: Response
+) {
+  const refreshToken = get(req, 'headers.x-refresh');
 
-//   const decoded = verifyJwt<{ session: string }>(
-//     refreshToken,
-//     'refreshTokenPublicKey'
-//   );
+  const decoded = verifyJwt<{ session: string }>(
+    refreshToken,
+    'refreshTokenPublicKey'
+  );
 
-//   if (!decoded) {
-//     return res.status(401).send('Could not refresh access token');
-//   }
+  if (!decoded) {
+    return res.status(401).send('Could not refresh access token');
+  }
 
-//   const session = await findSessionById(decoded.session);
+  const session = await findSessionById(decoded.session);
 
-//   if (!session || !session.valid) {
-//     return res.status(401).send('Could not refresh access token');
-//   }
+  if (!session || !session.valid) {
+    return res.status(401).send('Could not refresh access token');
+  }
 
-//   const user = await findUserById(String(session.user));
+  const user = await findUserById(String(session.user));
 
-//   if (!user) {
-//     return res.status(401).send('Could not refresh access token');
-//   }
+  if (!user) {
+    return res.status(401).send('Could not refresh access token');
+  }
 
-//   const accessToken = signAccessToken(user);
+  const accessToken = signAccessToken(user);
 
-//   return res.send({ accessToken });
-// }
+  return res.send({ accessToken });
+}

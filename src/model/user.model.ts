@@ -2,6 +2,7 @@ import {
   DocumentType,
   Severity,
   getModelForClass,
+  index,
   modelOptions,
   pre,
   prop,
@@ -20,6 +21,7 @@ import log from '../utils/logger';
   this.password = hash;
   return;
 })
+@index({ email: 1 })
 @modelOptions({
   schemaOptions: { timestamps: true },
   options: {
